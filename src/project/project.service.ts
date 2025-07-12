@@ -24,6 +24,12 @@ export class ProjectService {
     return this.projectRepo.findOneBy({ id: id.toString() });
   }
 
+  async findOneTasks(id: number) {
+    return this.projectRepo
+      .findOneBy({ id: id.toString() })
+      .then((project) => project?.tasks);
+  }
+
   async update(id: number, updateProjectDto: UpdateProjectDto) {
     return this.projectRepo.update({ id: id.toString() }, updateProjectDto);
   }
