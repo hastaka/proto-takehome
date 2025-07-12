@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Logger,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -23,6 +24,8 @@ import { Task } from './entities/task.entity';
 @ApiTags('Tasks')
 @Controller('tasks')
 export class TaskController {
+  private readonly logger = new Logger(TaskController.name);
+
   constructor(private readonly taskService: TaskService) {}
 
   @Post()
@@ -31,18 +34,14 @@ export class TaskController {
     type: Task,
   })
   @ApiNotFoundResponse({
-    description: 'Project not found.',
-    links: {
-      '#ProjectController_create': {
-        operationId: 'ProjectController_create',
-        operationRef: 'ProjectController_create',
-      },
-    },
+    description:
+      'Project not found — cannot create task without a valid project.',
   })
   @ApiBadRequestResponse({
     description: 'Failed to create task due to invalid input.',
   })
   create(@Body() createTaskDto: CreateTaskDto) {
+    this.logger.log(`POST /tasks ${JSON.stringify(createTaskDto)}`);
     return this.taskService.create(createTaskDto);
   }
 
@@ -53,6 +52,7 @@ export class TaskController {
   })
   @ApiInternalServerErrorResponse({ description: 'Failed to fetch tasks.' })
   findAll() {
+    this.logger.log(`GET /tasks`);
     return this.taskService.findAll();
   }
 
@@ -64,6 +64,7 @@ export class TaskController {
   @ApiNotFoundResponse({ description: 'Task not found.' })
   @ApiInternalServerErrorResponse({ description: 'Failed to fetch task.' })
   findOne(@Param('id') id: string) {
+    this.logger.log(`GET /tasks/${id}`);
     return this.taskService.findOne(id);
   }
 
@@ -77,17 +78,18 @@ export class TaskController {
     description: 'Failed to update task due to invalid input.',
   })
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+    this.logger.log(`PATCH /tasks/${id} ${JSON.stringify(updateTaskDto)}`);
     return this.taskService.update(id, updateTaskDto);
   }
 
   @Delete(':id')
   @ApiOkResponse({
     description: 'The task has been successfully deleted.',
-    type: Task,
   })
   @ApiNotFoundResponse({ description: 'Task not found.' })
   @ApiInternalServerErrorResponse({ description: 'Failed to delete task.' })
   remove(@Param('id') id: string) {
+    this.logger.log(`DELETE /tasks/${id}`);
     return this.taskService.remove(id);
   }
 }

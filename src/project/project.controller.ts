@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Logger,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -24,6 +25,8 @@ import { Task } from 'src/task/entities/task.entity';
 @ApiTags('Projects')
 @Controller('projects')
 export class ProjectController {
+  private readonly logger = new Logger(ProjectController.name);
+
   constructor(private readonly projectService: ProjectService) {}
 
   @Post()
@@ -35,6 +38,7 @@ export class ProjectController {
     description: 'Failed to create project due to invalid input.',
   })
   create(@Body() createProjectDto: CreateProjectDto) {
+    this.logger.log(`POST /projects ${JSON.stringify(createProjectDto)}`);
     return this.projectService.create(createProjectDto);
   }
 
@@ -45,6 +49,7 @@ export class ProjectController {
   })
   @ApiInternalServerErrorResponse({ description: 'Failed to fetch projects.' })
   findAll() {
+    this.logger.log('GET /projects');
     return this.projectService.findAll();
   }
 
@@ -56,6 +61,7 @@ export class ProjectController {
   @ApiInternalServerErrorResponse({ description: 'Failed to fetch project.' })
   @ApiNotFoundResponse({ description: 'Project ID not found.' })
   findOne(@Param('id') id: string) {
+    this.logger.log(`GET /projects/${id}`);
     return this.projectService.findOne(id);
   }
 
@@ -67,6 +73,7 @@ export class ProjectController {
   @ApiInternalServerErrorResponse({ description: 'Failed to fetch tasks.' })
   @ApiNotFoundResponse({ description: 'Project ID not found.' })
   findOneTasks(@Param('id') id: string) {
+    this.logger.log(`GET /projects/${id}/tasks`);
     return this.projectService.findOneTasks(id);
   }
 
@@ -80,6 +87,9 @@ export class ProjectController {
   })
   @ApiNotFoundResponse({ description: 'Project ID not found.' })
   update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
+    this.logger.log(
+      `PATCH /projects/${id} ${JSON.stringify(updateProjectDto)}`,
+    );
     return this.projectService.update(id, updateProjectDto);
   }
 
@@ -88,6 +98,7 @@ export class ProjectController {
   @ApiNotFoundResponse({ description: 'Project ID not found.' })
   @ApiInternalServerErrorResponse({ description: 'Failed to delete project.' })
   remove(@Param('id') id: string) {
+    this.logger.log(`DELETE /projects/${id}`);
     return this.projectService.remove(id);
   }
 }

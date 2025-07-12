@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -13,6 +14,8 @@ import { Project } from 'src/project/entities/project.entity';
 
 @Injectable()
 export class TaskService {
+  private readonly logger = new Logger(TaskService.name);
+
   constructor(
     @InjectRepository(Task)
     private readonly taskRepo: Repository<Task>,
@@ -27,24 +30,29 @@ export class TaskService {
       });
 
       if (!project) {
-        console.error(`Project <${createTaskDto.projectId}> not found`);
+        this.logger.warn(`Project <${createTaskDto.projectId}> not found`);
         throw new NotFoundException(
           `Project <${createTaskDto.projectId}> not found`,
         );
       }
+
       const task = this.taskRepo.create(createTaskDto);
-      return this.taskRepo.save(task);
+      const saved = await this.taskRepo.save(task);
+      this.logger.log(`Created task <${saved.id}> in project <${project.id}>`);
+      return saved;
     } catch (error) {
-      console.error('Error creating task:', error);
-      throw new BadRequestException(error.message);
+      this.logger.error('Error creating task', error.stack);
+      throw new BadRequestException('Failed to create task');
     }
   }
 
   async findAll(): Promise<Task[]> {
     try {
-      return this.taskRepo.find();
+      const tasks = await this.taskRepo.find();
+      this.logger.log(`Fetched ${tasks.length} tasks`);
+      return tasks;
     } catch (error) {
-      console.error('Error fetching tasks:', error);
+      this.logger.error('Error fetching tasks', error.stack);
       throw new InternalServerErrorException('Failed to fetch tasks');
     }
   }
@@ -53,13 +61,15 @@ export class TaskService {
     try {
       const task = await this.taskRepo.findOneBy({ id });
       if (!task) {
+        this.logger.warn(`Task <${id}> not found`);
         throw new NotFoundException(`Task <${id}> not found`);
       }
+      this.logger.log(`Found task <${id}>`);
       return task;
     } catch (error) {
-      console.error(`Error finding task <${id}>:`, error);
+      this.logger.error(`Error finding task <${id}>`, error.stack);
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException(`Failed to find task ${id}`);
+      throw new InternalServerErrorException(`Failed to find task <${id}>`);
     }
   }
 
@@ -67,11 +77,14 @@ export class TaskService {
     try {
       const result = await this.taskRepo.update({ id }, updateTaskDto);
       if (result.affected === 0) {
+        this.logger.warn(`Task <${id}> not found for update`);
         throw new NotFoundException(`Task <${id}> not found`);
       }
+
+      this.logger.log(`Updated task <${id}>`);
       return { message: `Task <${id}> updated successfully` };
     } catch (error) {
-      console.error(`Error updating task <${id}>:`, error);
+      this.logger.error(`Error updating task <${id}>`, error.stack);
       if (error instanceof NotFoundException) throw error;
       throw new BadRequestException(`Failed to update task <${id}>`);
     }
@@ -81,11 +94,14 @@ export class TaskService {
     try {
       const result = await this.taskRepo.delete({ id });
       if (result.affected === 0) {
+        this.logger.warn(`Task <${id}> not found for deletion`);
         throw new NotFoundException(`Task <${id}> not found`);
       }
+
+      this.logger.log(`Deleted task <${id}>`);
       return { message: `Task <${id}> deleted successfully` };
     } catch (error) {
-      console.error(`Error deleting task <${id}>:`, error);
+      this.logger.error(`Error deleting task <${id}>`, error.stack);
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException(`Failed to delete task <${id}>`);
     }
