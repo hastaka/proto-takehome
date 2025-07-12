@@ -4,7 +4,7 @@ import { Task } from './task.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
-@ApiTags('tasks')
+@ApiTags('Tasks')
 @Controller('tasks')
 export class TaskController {
   constructor(
