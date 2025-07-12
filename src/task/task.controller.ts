@@ -1,19 +1,44 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Task } from './task.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { TaskService } from './task.service';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @ApiTags('Tasks')
 @Controller('tasks')
 export class TaskController {
-  constructor(
-    @InjectRepository(Task)
-    private readonly taskRepo: Repository<Task>,
-  ) {}
+  constructor(private readonly taskService: TaskService) {}
+
+  @Post()
+  create(@Body() createTaskDto: CreateTaskDto) {
+    return this.taskService.create(createTaskDto);
+  }
 
   @Get()
-  async findAll(): Promise<Task[]> {
-    return this.taskRepo.find();
+  findAll() {
+    return this.taskService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.taskService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+    return this.taskService.update(+id, updateTaskDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.taskService.remove(+id);
   }
 }

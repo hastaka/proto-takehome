@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProjectModule } from './project/project.module';
 import * as dns from 'dns';
-import { TaskModule } from './task/task.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TaskModule } from './task/task.module';
+import { ProjectModule } from './project/project.module';
 
 dns.setDefaultResultOrder('ipv4first'); // Ensure IPv4 addresses are preferred
 

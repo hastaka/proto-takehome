@@ -7,7 +7,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Project } from 'src/project/project.entity';
+import { Project } from 'src/project/entities/project.entity';
 
 @Entity()
 export class Task {
@@ -17,7 +17,7 @@ export class Task {
 
   @ApiProperty()
   @ManyToOne(() => Project, (project) => project.tasks)
-  project: Project
+  project: Project;
 
   @ApiProperty()
   @Column()
@@ -30,12 +30,12 @@ export class Task {
   @ApiProperty()
   @Column({
     type: 'enum',
-    enum: ['todo', 'in_progress',  'done'],
+    enum: ['todo', 'in_progress', 'done'],
   })
   status: string;
 
   @ApiProperty()
-  @Column({nullable: true})
+  @Column({ nullable: true })
   due_date: Date;
 
   @ApiProperty()

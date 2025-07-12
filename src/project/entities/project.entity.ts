@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Task } from 'src/task/task.entity';
+import { Task } from 'src/task/entities/task.entity';
 
 @Entity()
 export class Project {
@@ -32,5 +32,5 @@ export class Project {
   updated_at: Date;
 
   @OneToMany(() => Task, (task) => task.project)
-  tasks: Task[]
+  tasks: Task[];
 }

@@ -1,19 +1,44 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Project } from './project.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { ProjectService } from './project.service';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
 
 @ApiTags('Projects')
 @Controller('projects')
 export class ProjectController {
-  constructor(
-    @InjectRepository(Project)
-    private readonly projectRepo: Repository<Project>,
-  ) {}
+  constructor(private readonly projectService: ProjectService) {}
+
+  @Post()
+  create(@Body() createProjectDto: CreateProjectDto) {
+    return this.projectService.create(createProjectDto);
+  }
 
   @Get()
-  async findAll(): Promise<Project[]> {
-    return this.projectRepo.find();
+  findAll() {
+    return this.projectService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.projectService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
+    return this.projectService.update(+id, updateProjectDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.projectService.remove(+id);
   }
 }
