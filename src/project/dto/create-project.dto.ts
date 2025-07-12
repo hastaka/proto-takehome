@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class CreateProjectDto {
+export class CreateProjectDTO {
   @ApiProperty({
     description: 'Name of the project',
     example: 'Proto Takehome',

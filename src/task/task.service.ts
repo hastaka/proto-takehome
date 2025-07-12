@@ -5,8 +5,8 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { CreateTaskDTO } from './dto/create-task.dto';
+import { UpdateTaskDTO } from './dto/update-task.dto';
 import { Task } from './entities/task.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,7 +23,7 @@ export class TaskService {
     private readonly projectRepo: Repository<Project>,
   ) {}
 
-  async create(createTaskDto: CreateTaskDto) {
+  async create(createTaskDto: CreateTaskDTO) {
     try {
       const project = await this.projectRepo.findOneBy({
         id: createTaskDto.projectId,
@@ -73,7 +73,7 @@ export class TaskService {
     }
   }
 
-  async update(id: string, updateTaskDto: UpdateTaskDto) {
+  async update(id: string, updateTaskDto: UpdateTaskDTO) {
     try {
       const result = await this.taskRepo.update({ id }, updateTaskDto);
       if (result.affected === 0) {

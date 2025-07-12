@@ -5,8 +5,8 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { CreateProjectDto } from './dto/create-project.dto';
-import { UpdateProjectDto } from './dto/update-project.dto';
+import { CreateProjectDTO } from './dto/create-project.dto';
+import { UpdateProjectDTO } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,7 +20,7 @@ export class ProjectService {
     private readonly projectRepo: Repository<Project>,
   ) {}
 
-  async create(createProjectDto: CreateProjectDto): Promise<Project> {
+  async create(createProjectDto: CreateProjectDTO): Promise<Project> {
     try {
       const project = this.projectRepo.create(createProjectDto);
       const saved = await this.projectRepo.save(project);
@@ -87,7 +87,7 @@ export class ProjectService {
     }
   }
 
-  async update(id: string, updateProjectDto: UpdateProjectDto) {
+  async update(id: string, updateProjectDto: UpdateProjectDTO) {
     try {
       const result = await this.projectRepo.update({ id }, updateProjectDto);
 

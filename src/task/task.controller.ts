@@ -17,8 +17,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { TaskService } from './task.service';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { CreateTaskDTO } from './dto/create-task.dto';
+import { UpdateTaskDTO } from './dto/update-task.dto';
 import { Task } from './entities/task.entity';
 
 @ApiTags('Tasks')
@@ -40,7 +40,7 @@ export class TaskController {
   @ApiBadRequestResponse({
     description: 'Failed to create task due to invalid input.',
   })
-  create(@Body() createTaskDto: CreateTaskDto) {
+  create(@Body() createTaskDto: CreateTaskDTO) {
     this.logger.log(`POST /tasks ${JSON.stringify(createTaskDto)}`);
     return this.taskService.create(createTaskDto);
   }
@@ -77,7 +77,7 @@ export class TaskController {
   @ApiBadRequestResponse({
     description: 'Failed to update task due to invalid input.',
   })
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDTO) {
     this.logger.log(`PATCH /tasks/${id} ${JSON.stringify(updateTaskDto)}`);
     return this.taskService.update(id, updateTaskDto);
   }

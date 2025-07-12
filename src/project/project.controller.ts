@@ -17,8 +17,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ProjectService } from './project.service';
-import { CreateProjectDto } from './dto/create-project.dto';
-import { UpdateProjectDto } from './dto/update-project.dto';
+import { CreateProjectDTO } from './dto/create-project.dto';
+import { UpdateProjectDTO } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
 import { Task } from 'src/task/entities/task.entity';
 
@@ -37,7 +37,7 @@ export class ProjectController {
   @ApiBadRequestResponse({
     description: 'Failed to create project due to invalid input.',
   })
-  create(@Body() createProjectDto: CreateProjectDto) {
+  create(@Body() createProjectDto: CreateProjectDTO) {
     this.logger.log(`POST /projects ${JSON.stringify(createProjectDto)}`);
     return this.projectService.create(createProjectDto);
   }
@@ -86,7 +86,7 @@ export class ProjectController {
     description: 'Failed to update project due to invalid input.',
   })
   @ApiNotFoundResponse({ description: 'Project ID not found.' })
-  update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
+  update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDTO) {
     this.logger.log(
       `PATCH /projects/${id} ${JSON.stringify(updateProjectDto)}`,
     );

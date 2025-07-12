@@ -7,7 +7,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Proto Takehome API')
-    .setDescription('API documentation')
+    .setDescription('A simple, production-grade NestJS API for a basic task management system, supporting core operations around Projects and Tasks.<br>The API is modular, well-documented, and maintainable, using a relational database and ORM.')
     .setVersion('1.0')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
