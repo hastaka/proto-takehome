@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Project } from 'src/project/entities/project.entity';
@@ -19,7 +20,13 @@ export class Task {
 
   @ApiProperty()
   @ManyToOne(() => Project, (project) => project.tasks)
+  @JoinColumn({ name: 'project_id' })
   project: Project;
+
+  @ApiProperty()
+  @Column()
+  project_id: string;
+
 
   @ApiProperty()
   @Column()
