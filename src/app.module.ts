@@ -24,7 +24,7 @@ dns.setDefaultResultOrder('ipv4first'); // Ensure IPv4 addresses are preferred
       password: process.env.NEON_DB_PASSWORD,
       database: 'neondb',
       ssl: { rejectUnauthorized: false }, // Required for SSL
-      synchronize: true, // Set to false in production
+      synchronize: false, // Set to false in production
       autoLoadEntities: true,
       extra: {
         connectionTimeoutMillis: 5000,
