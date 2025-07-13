@@ -18,11 +18,11 @@ dns.setDefaultResultOrder('ipv4first'); // Ensure IPv4 addresses are preferred
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'ep-long-cloud-ae69x1nb-pooler.c-2.us-east-2.aws.neon.tech',
-      port: 5432,
-      username: 'neondb_owner',
-      password: process.env.NEON_DB_PASSWORD,
-      database: 'neondb',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT ?? '5432'),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       ssl: { rejectUnauthorized: false }, // Required for SSL
       synchronize: false, // Set to false in production
       autoLoadEntities: true,
