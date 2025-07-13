@@ -28,13 +28,13 @@ export class TaskService {
   async create(createTaskDto: CreateTaskDTO) {
     try {
       const project = await this.projectRepo.findOneBy({
-        id: createTaskDto.projectId,
+        id: createTaskDto.project_id,
       });
 
       if (!project) {
-        this.logger.warn(`Project <${createTaskDto.projectId}> not found`);
+        this.logger.warn(`Project <${createTaskDto.project_id}> not found`);
         throw new NotFoundException(
-          `Project <${createTaskDto.projectId}> not found`,
+          `Project <${createTaskDto.project_id}> not found`,
         );
       }
 

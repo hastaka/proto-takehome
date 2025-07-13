@@ -10,7 +10,7 @@ export class CreateTaskDTO {
   })
   @IsUUID()
   @IsNotEmpty()
-  projectId: string;
+  project_id: string;
 
   @ApiProperty({
     description: 'Title of the task',
