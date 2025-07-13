@@ -13,7 +13,7 @@ describe('ProjectController (e2e)', () => {
   let server: any;
   let createdProjectId: string;
 
-  (beforeAll(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule], // Load entire real AppModule (or partial if you want)
     }).compile();
@@ -21,15 +21,14 @@ describe('ProjectController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
     server = app.getHttpServer();
-  }),
-    10000);
+  }, 10000);
 
   afterAll(async () => {
     await app.close();
   });
 
   it('/POST projects — should create a project', async () => {
-    const payload:CreateProjectDTO = { name: 'E2E Project' };
+    const payload: CreateProjectDTO = { name: 'E2E Project' };
 
     const res = await request(server)
       .post('/projects')
