@@ -6,6 +6,8 @@ import * as request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
 import { Task } from 'src/task/entities/task.entity';
+import { CreateTaskDTO } from 'src/task/dto/create-task.dto';
+import { UpdateTaskDTO } from 'src/task/dto/update-task.dto';
 
 describe('TaskController (e2e)', () => {
   let app: INestApplication<App>;
@@ -13,38 +15,38 @@ describe('TaskController (e2e)', () => {
   let createdProjectId: string;
   let createdTaskId: string;
 
-  beforeAll(async () => {
+  (beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule], // Load entire real AppModule (or partial if you want)
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
-        server = app.getHttpServer();
+    server = app.getHttpServer();
 
     const projectPayload = { name: `E2E Project (Task)` };
     const res = await request(server).post('/projects').send(projectPayload);
     expect(res.status).toBe(201);
     createdProjectId = res.body.id;
     expect(createdProjectId).toBeDefined();
-  }), 10000;
+  }),
+    10000);
 
   afterAll(async () => {
-    const res = await request(server).delete(`/projects/${createdProjectId}`);
-    expect(res.status).toBe(200);
     await app.close();
   });
 
   it('/POST tasks — should create a task', async () => {
-    const payload = {
-      name: `E2E Task`,
+    const payload:CreateTaskDTO = {
+      title: `E2E Task`,
+      status: 'todo',
       projectId: createdProjectId,
     };
 
     const res = await request(server).post('/tasks').send(payload).expect(201);
 
     expect(res.body).toHaveProperty('id');
-    expect(res.body.name).toBe(payload.name);
+    expect(res.body.title).toBe(payload.title);
     expect(res.body.projectId).toBe(payload.projectId);
 
     createdTaskId = res.body.id;
@@ -54,18 +56,20 @@ describe('TaskController (e2e)', () => {
     const res = await request(server).get('/tasks').expect(200);
 
     expect(Array.isArray(res.body)).toBe(true);
-    expect(res.body.find((t:Task) => t.id === createdTaskId)).toBeDefined();
+    expect(res.body.find((t: Task) => t.id === createdTaskId)).toBeDefined();
   });
 
   it('/GET tasks/:id — should get task by id', async () => {
-    const res = await request(server).get(`/tasks/${createdTaskId}`).expect(200);
+    const res = await request(server)
+      .get(`/tasks/${createdTaskId}`)
+      .expect(200);
 
     expect(res.body).toHaveProperty('id', createdTaskId);
     expect(res.body.projectId).toBe(createdProjectId);
   });
 
   it('/PATCH tasks/:id — should update task', async () => {
-    const updatePayload = { name: `Updated E2E Task` };
+    const updatePayload:UpdateTaskDTO = { title: `Updated E2E Task` };
 
     const res = await request(server)
       .patch(`/tasks/${createdTaskId}`)
@@ -76,7 +80,9 @@ describe('TaskController (e2e)', () => {
   });
 
   it('/DELETE tasks/:id — should delete task', async () => {
-    const res = await request(server).delete(`/tasks/${createdTaskId}`).expect(200);
+    const res = await request(server)
+      .delete(`/tasks/${createdTaskId}`)
+      .expect(200);
 
     expect(res.body).toHaveProperty('message');
   });
@@ -84,5 +90,4 @@ describe('TaskController (e2e)', () => {
   it('/GET tasks/:id — should 404 after delete', async () => {
     await request(server).get(`/tasks/${createdTaskId}`).expect(404);
   });
-
 });

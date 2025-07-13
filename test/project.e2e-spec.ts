@@ -6,28 +6,30 @@ import * as request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
 import { Project } from 'src/project/entities/project.entity';
+import { CreateProjectDTO } from 'src/project/dto/create-project.dto';
 
 describe('ProjectController (e2e)', () => {
   let app: INestApplication<App>;
   let server: any;
   let createdProjectId: string;
 
-  beforeAll(async () => {
+  (beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule], // Load entire real AppModule (or partial if you want)
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
-        server = app.getHttpServer();
-  }), 10000;
+    server = app.getHttpServer();
+  }),
+    10000);
 
   afterAll(async () => {
     await app.close();
   });
 
   it('/POST projects — should create a project', async () => {
-    const payload = { name: 'E2E Project' };
+    const payload:CreateProjectDTO = { name: 'E2E Project' };
 
     const res = await request(server)
       .post('/projects')
@@ -44,7 +46,9 @@ describe('ProjectController (e2e)', () => {
     const res = await request(server).get('/projects').expect(200);
 
     expect(Array.isArray(res.body)).toBe(true);
-    expect(res.body.find((p:Project) => p.id === createdProjectId)).toBeDefined();
+    expect(
+      res.body.find((p: Project) => p.id === createdProjectId),
+    ).toBeDefined();
   });
 
   it('/GET projects/:id — should get one project', async () => {
