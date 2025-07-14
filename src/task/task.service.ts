@@ -43,6 +43,7 @@ export class TaskService {
       this.logger.log(`Created task <${saved.id}> in project <${project.id}>`);
       return saved;
     } catch (error) {
+      if (error instanceof NotFoundException) throw error;
       this.logger.error('Error creating task', error.stack);
       throw new BadRequestException('Failed to create task');
     }

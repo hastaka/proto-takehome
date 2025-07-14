@@ -113,11 +113,13 @@ Visit [http://localhost:3000/docs](http://localhost:3000/docs) to view interacti
 
 ## ✅ Testing
 
-Run the complete E2E test suite:
+Tests are available for the following:
+|Test Name|Command|
+|-|-|
+|E2E Tests|`npm run test:e2e`|
+|Unit Tests|`npm run test:unit`|
+|All Tests|`npm run test:all`|
 
-```
-npm run test:e2e
-```
 
 ### ProjectController E2E Tests
 
@@ -189,6 +191,72 @@ These tests verify the full lifecycle of a Task in the context of its parent Pro
 
       GET /tasks/:id after deletion
       Confirms that fetching a deleted task returns a 404 Not Found.
+
+### ProjectService Unit Tests
+- create()
+
+      Successfully creates and saves a project.
+      Throws BadRequestException if saving the project fails.
+
+- findAll()
+
+      Returns all projects successfully.
+      Throws InternalServerErrorException if fetching projects fails.
+
+- findOne(id)
+
+      Returns a project by ID if found.
+      Throws NotFoundException if the project does not exist.
+      Throws InternalServerErrorException on other errors.
+
+- findOneTasks(id)
+
+      Returns the list of tasks for a given project.
+      Throws NotFoundException if the project is not found.
+      Throws InternalServerErrorException on other errors.
+
+- update(id, dto)
+
+      Successfully updates a project.
+      Throws NotFoundException if the project to update does not exist.
+      Throws BadRequestException on other update errors.
+
+- remove(id)
+
+      Successfully deletes a project.
+      Throws NotFoundException if the project to delete does not exist.
+      Throws InternalServerErrorException on other deletion errors.
+
+### TaskService Unit Tests
+
+- create()
+
+      Successfully creates and saves a task when the associated project exists.
+      Throws NotFoundException if the project specified in project_id does not exist.
+      Throws BadRequestException on other errors during creation.
+
+- findAll()
+
+      Returns all tasks successfully.
+      Throws InternalServerErrorException if fetching tasks fails.
+
+- findOne(id)
+
+      Returns a task by ID if found.
+      Throws NotFoundException if the task is not found.
+      Throws InternalServerErrorException on other errors.
+
+- update(id, updateDto)
+
+      Successfully updates a task.
+      Throws NotFoundException if no task was updated (task not found).
+      Throws BadRequestException on other errors during update.
+
+- remove(id)
+
+      Successfully deletes a task.
+      Throws NotFoundException if no task was deleted (task not found).
+      Throws InternalServerErrorException on other errors during deletion.
 
 ## 📦 NPM run Scripts
 
