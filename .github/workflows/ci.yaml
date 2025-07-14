@@ -25,11 +25,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # fetch full history so push works smoothly
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '24'  # specify your node version here
+          node-version: '24'
 
       - name: Install dependencies
         run: npm install
@@ -37,4 +39,10 @@ jobs:
       - name: Run tests
         run: npm run test:all
 
-      # The workflow will automatically fail if the test script exits with a non-zero status.
+      - name: Push to prod branch if tests pass
+        if: success() && github.ref != 'refs/heads/prod'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -B prod
+          git push origin prod --force
