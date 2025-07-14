@@ -15,11 +15,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      DB_HOST='ep-long-cloud-ae69x1nb-pooler.c-2.us-east-2.aws.neon.tech'
-      DB_PORT=5432
-      DB_USER='neondb_owner'
-      DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-      DB_NAME='neondb'
+      DB_HOST: 'ep-long-cloud-ae69x1nb-pooler.c-2.us-east-2.aws.neon.tech'
+      DB_PORT: 5432
+      DB_USER: 'neondb_owner'
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME: 'neondb'
 
     steps:
       - name: Checkout code
