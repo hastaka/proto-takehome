@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: test
     env:
+      USER_PAT: ${{ secrets.USER_PAT }}
       DB_HOST: 'ep-long-cloud-ae69x1nb-pooler.c-2.us-east-2.aws.neon.tech'
       DB_PORT: 5432
       DB_USER: 'neondb_owner'
@@ -40,9 +41,10 @@ jobs:
         run: npm run test:all
 
       - name: Push to prod branch if tests pass
-        if: success() && github.ref != 'refs/heads/prod'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -B prod
-          git push origin prod --force
+          if: success() && github.ref != 'refs/heads/prod'
+          run: |
+            git config user.name "Anand Hastak (GitHub Actions)"
+            git config user.email "ahastak@gmail.com"
+            git remote set-url origin https://x-access-token:${USER_PAT}@github.com/${{ github.repository }}.git
+            git checkout -B prod
+            git push origin prod --force
