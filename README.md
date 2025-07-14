@@ -54,7 +54,7 @@ This project uses PostgreSQL as its relational database, with TypeORM as the ORM
 |description|VARCHAR||Project description|
 |created_at|TIMESTAMP|DEFAULT now()|Timestamp when the project was created|
 |updated_at|TIMESTAMP|DEFAULT now() on update|Timestamp when the project was last updated|
-|\_tasks*|-|One-to-many to tasks|Virtual column - not stored in DB; defines relation in ORM|
+|*tasks*|-|*One-to-many to tasks*|*Virtual column - not stored in DB; defines relation in ORM*|
 
 **tasks Table**
 |Column|Type|Constraints|Description|
