@@ -1,0 +1,33 @@
+name: CI - Run Tests
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - 'feature/**'  # optional: run on feature branches
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '24'  # specify your node version here
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm run test:all
+
+      # The workflow will automatically fail if the test script exits with a non-zero status.
