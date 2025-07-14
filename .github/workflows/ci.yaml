@@ -47,4 +47,4 @@ jobs:
           git config user.email "ahastak@gmail.com"
           git remote set-url origin https://x-access-token:${USER_PAT}@github.com/${{ github.repository }}.git
           git checkout -B prod
-          git push origin prod --forces
+          git push origin prod --force
